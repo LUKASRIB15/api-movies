@@ -1,5 +1,8 @@
 const express = require("express")
 const routes = require("./routes")
+const database = require("./database/sqlite")
+
+database()
 
 const app = express()
 app.use(routes)

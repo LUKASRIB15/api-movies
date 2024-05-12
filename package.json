@@ -4,13 +4,17 @@
   "description": "Servidor web para aplicações de filme",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/server.js"
+    "start": "nodemon src/server.js",
+    "migration": "npx knex migrate:latest"
   },
   "keywords": [],
   "author": "Lucas de Oliveira Ribeiro",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "knex": "^3.1.0",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
