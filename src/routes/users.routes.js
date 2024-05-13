@@ -1,10 +1,14 @@
 const {Router} = require("express")
+const UsersControllers = require("../controllers/usersControllers")
+
 
 const usersRoutes = Router()
 
-usersRoutes.post('/', ()=>{})
-usersRoutes.get('/:id', (request, response)=>response.json({message: "rotas conectadas"}))
-usersRoutes.put('/:id', ()=>{})
-usersRoutes.delete(':id', ()=>{})
+const usersControllers = new UsersControllers()
+
+usersRoutes.post('/', usersControllers.create)
+usersRoutes.get('/:id', usersControllers.show)
+usersRoutes.put('/:id', usersControllers.update)
+usersRoutes.delete('/:id', usersControllers.delete)
 
 module.exports = usersRoutes
