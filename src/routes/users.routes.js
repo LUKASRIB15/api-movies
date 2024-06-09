@@ -1,5 +1,6 @@
 const {Router} = require("express")
 const UsersControllers = require("../controllers/usersControllers")
+const ensureAuthenticated = require("../middlewares/ensureAuthenticated")
 
 
 const usersRoutes = Router()
@@ -8,7 +9,7 @@ const usersControllers = new UsersControllers()
 
 usersRoutes.post('/', usersControllers.create)
 usersRoutes.get('/:id', usersControllers.show)
-usersRoutes.put('/:id', usersControllers.update)
-usersRoutes.delete('/:id', usersControllers.delete)
+usersRoutes.put('/', ensureAuthenticated, usersControllers.update)
+usersRoutes.delete('/', ensureAuthenticated,usersControllers.delete)
 
 module.exports = usersRoutes
