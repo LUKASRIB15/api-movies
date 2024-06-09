@@ -1,6 +1,8 @@
 const knex = require('../database/knex')
 const AppError = require('../utils/AppError')
 const {compare, hash} = require("bcryptjs")
+const {sign} = require("jsonwebtoken")
+const Auth = require("../configs/jwt")
 
 class UsersControllers{
   async create(request, response){
@@ -14,13 +16,20 @@ class UsersControllers{
 
     const hashedPassword = await hash(password, 8)
 
-    await knex("users").insert({
+    const [user_id] = await knex("users").insert({
       name,
       email,
       password: hashedPassword,
     })
 
-    return response.status(201).json()
+    const {secret, expiresIn} = Auth.jwt
+
+    const token = sign({}, secret, {
+      subject: String(user_id),
+      expiresIn
+    })
+
+    return response.status(201).json({token})
   }
 
   async show(request, response){
@@ -37,7 +46,7 @@ class UsersControllers{
 
   async update(request, response){
     const {name, email, password, old_password, avatar} = request.body
-    const {id} = request.params
+    const id = request.user.id
 
     const user = await knex("users").where({id}).first()
 
@@ -73,7 +82,7 @@ class UsersControllers{
   }
 
   async delete(request, response){
-    const {id} = request.params
+    const id = request.user.id
 
     const user = await knex("users").where({id}).first()
 
