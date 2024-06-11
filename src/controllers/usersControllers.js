@@ -45,7 +45,7 @@ class UsersControllers{
   }
 
   async update(request, response){
-    const {name, email, password, old_password, avatar} = request.body
+    const {name, email, password, old_password} = request.body
     const id = request.user.id
 
     const user = await knex("users").where({id}).first()
@@ -73,7 +73,6 @@ class UsersControllers{
     user.password = await hash(password, 8) ?? user.password
     user.name = name ?? user.name
     user.email = email ?? user.email
-    user.avatar = avatar ?? user.avatar
     user.updated_at = knex.fn.now()
 
     await knex("users").update(user).where({id: user.id})
