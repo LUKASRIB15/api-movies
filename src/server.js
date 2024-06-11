@@ -6,6 +6,7 @@
 // UnhandledPromiseRejection: This error originated either by throwing inside of an async function without a catch block, 
 // or by rejecting a promise which was not handled with .catch(). The promise rejected with the reason "#<AppError>"
 require("express-async-errors")
+require("dotenv/config")
 
 const express = require("express")
 const routes = require("./routes")
@@ -39,7 +40,7 @@ app.use((error, request, response, next)=>{
   })
 })
 
-app.listen(3333, ()=>{
+app.listen(process.env.PORT || 3333, ()=>{
   console.log("server running on port 3333! 🚀")
 })
 
