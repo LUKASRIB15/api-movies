@@ -3,31 +3,18 @@ const AppError = require('../utils/AppError')
 const {compare, hash} = require("bcryptjs")
 const {sign} = require("jsonwebtoken")
 const Auth = require("../configs/jwt")
+const UserRepository = require("../repositories/UserRepository")
+const UserCreateService = require("../services/userCreateService")
 
 class UsersControllers{
   async create(request, response){
     const {name, email, password} = request.body
 
-    const userEmailExists = await knex("users").where({email}).first()
+    const userRepository = new UserRepository()
+    const userCreateService = new UserCreateService(userRepository)
 
-    if(userEmailExists){
-      throw new AppError("This email already is in use by other user! Try with another email.")
-    }
-
-    const hashedPassword = await hash(password, 8)
-
-    const [user_id] = await knex("users").insert({
-      name,
-      email,
-      password: hashedPassword,
-    })
-
-    const {secret, expiresIn} = Auth.jwt
-
-    const token = sign({}, secret, {
-      subject: String(user_id),
-      expiresIn
-    })
+    const {token} = await userCreateService.execute({name, email, password})
+    
 
     return response.status(201).json({token})
   }
